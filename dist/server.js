@@ -2,9 +2,10 @@ import http from "http";
 import { validate as isValidUuid } from "uuid";
 import { lotrCharacters } from "./data/characters.js";
 import { sendResponse } from "./helpers/helpers.js";
+import dotenv from "dotenv";
+dotenv.config();
 const server = http.createServer((req, res) => {
     const urlSplittedArray = req.url?.split("/").filter(Boolean);
-    console.log(urlSplittedArray);
     if (req.method === "GET" &&
         urlSplittedArray &&
         urlSplittedArray[0] === "api" &&
