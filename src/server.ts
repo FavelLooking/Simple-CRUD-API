@@ -50,7 +50,7 @@ const server = http.createServer((req, res) => {
         urlSplittedArray[1] === "users"
       ) {
         let body = "";
-        req.on("data", (chunk) => (body += chunk.toString()));
+        req.on("data", (chunk: Buffer) => (body += chunk.toString()));
         req.on("end", () => {
           try {
             const newUser: Character = JSON.parse(body);
@@ -78,6 +78,49 @@ const server = http.createServer((req, res) => {
         sendResponse(res, 404, "text/plain", "Not Found");
       }
       break;
+
+    case "PUT":
+      if (
+        urlSplittedArray &&
+        urlSplittedArray[0] === "api" &&
+        urlSplittedArray[1] === "users" &&
+        urlSplittedArray.length === 3
+      ) {
+        const userId = urlSplittedArray[2];
+        if (!isValidUuid(userId)) {
+          sendResponse(res, 400, "text/plain", "Wrong UUID");
+          return;
+        }
+        let body = "";
+        req.on("data", (chunk: Buffer) => (body += chunk.toString()));
+        req.on("end", () => {
+          try {
+            const userToUpdate = JSON.parse(body);
+            console.log(userToUpdate);
+            const userIndex = lotrCharacters.findIndex(
+              (char) => char.id === userId,
+            );
+            if (userIndex === -1) {
+              sendResponse(res, 404, "text/plain", "User not found.");
+              return;
+            }
+
+            lotrCharacters[userIndex] = {
+              ...lotrCharacters[userIndex],
+              ...userToUpdate,
+            };
+
+            sendResponse(
+              res,
+              200,
+              "application/json",
+              JSON.stringify(lotrCharacters[userIndex]),
+            );
+          } catch (error) {
+            sendResponse(res, 400, "text/plain", "Invalid JSON");
+          }
+        });
+      }
   }
 });
 
