@@ -1,7 +1,7 @@
 import http from "http";
 import { validate as isValidUuid, v4 as uuidv4 } from "uuid";
-import { Character, lotrCharacters } from "./data/characters.js";
-import { sendResponse } from "./helpers/helpers.js";
+import { Character, lotrCharacters } from "./data/characters";
+import { sendResponse } from "./helpers/helpers";
 import dotenv from "dotenv";
 
 dotenv.config();

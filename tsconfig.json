@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext",
+    "module": "commonjs",
     "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true
+    "sourceMap": true,
+    "strict": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts", "./src/server.ts"],
   "exclude": ["node_modules"]
 }
