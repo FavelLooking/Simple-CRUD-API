@@ -96,7 +96,6 @@ const server = http.createServer((req, res) => {
         req.on("end", () => {
           try {
             const userToUpdate = JSON.parse(body);
-            console.log(userToUpdate);
             const userIndex = lotrCharacters.findIndex(
               (char) => char.id === userId,
             );
@@ -117,7 +116,46 @@ const server = http.createServer((req, res) => {
               JSON.stringify(lotrCharacters[userIndex]),
             );
           } catch (error) {
-            sendResponse(res, 400, "text/plain", "Invalid JSON");
+            console.error("Error in PUT request:", error);
+            sendResponse(res, 500, "text/plain", "Internal Server Error");
+          }
+        });
+      }
+    case "DELETE":
+      if (
+        urlSplittedArray &&
+        urlSplittedArray[0] === "api" &&
+        urlSplittedArray[1] === "users" &&
+        urlSplittedArray.length === 3
+      ) {
+        const userId = urlSplittedArray[2];
+        if (!isValidUuid(userId)) {
+          sendResponse(res, 400, "text/plain", "Wrong UUID");
+          return;
+        }
+
+        let body = "";
+        req.on("data", (chunk: Buffer) => (body += chunk.toString()));
+        req.on("end", () => {
+          try {
+            const userIndex = lotrCharacters.findIndex(
+              (char) => char.id === userId,
+            );
+            if (userIndex === -1) {
+              sendResponse(res, 404, "text/plain", "User not found.");
+              return;
+            }
+            lotrCharacters.splice(userIndex, 1);
+
+            sendResponse(
+              res,
+              204,
+              "application/json",
+              JSON.stringify(lotrCharacters),
+            );
+          } catch (error) {
+            console.error("Error in DELETE request:", error);
+            sendResponse(res, 500, "text/plain", "Internal Server Error");
           }
         });
       }
