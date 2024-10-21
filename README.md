@@ -37,3 +37,10 @@ DELETE `/api/users/{userId}`
 
 Testing
 Sorry, tests weren't implemented
+
+You can use this data for testing queries:
+`{
+    "username": "Frodo Baggins",
+    "age": 33,
+    "hobbies": ["Cooking", "Gardening", "Adventuring"]
+}`
